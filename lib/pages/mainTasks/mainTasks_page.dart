@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 
+import 'package:todolist/pages/task/task_page.dart';
+
 import '../../designs/colors.dart';
 import '../../designs/images.dart';
+import '../../designs/style.dart';
 
-class TasksPage extends StatelessWidget {
-  const TasksPage({super.key});
+class MainTasksPage extends StatefulWidget {
+  const MainTasksPage({
+    super.key,
+    required this.title,
+  });
 
+  final String title;
+
+  @override
+  State<MainTasksPage> createState() => _TasksPageState();
+}
+
+class _TasksPageState extends State<MainTasksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        title: const Text(
-          'Tasks',
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: 'SFPro-Bold',
-          ),
+        title: Text(
+          widget.title,
+          style: titleTextStyle,
         ),
         centerTitle: true,
       ),
@@ -60,45 +70,48 @@ class _GridItemState extends State<GridItem> {
   }
 
   Widget _category() {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              offset: const Offset(0, 1),
-              blurRadius: 2,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: const Offset(1, 3),
-              blurRadius: 3,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              offset: const Offset(1, 7),
-              blurRadius: 5,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              offset: const Offset(2, 13),
-              blurRadius: 5,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              offset: const Offset(4, 21),
-              blurRadius: 6,
-            ),
-          ],
-        ),
-        child: Card(
-          color: primaryColor,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.06),
+            offset: Offset(0, 1),
+            blurRadius: 2,
+          ),
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            offset: Offset(1, 3),
+            blurRadius: 3,
+          ),
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.04),
+            offset: Offset(1, 7),
+            blurRadius: 5,
+          ),
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.03),
+            offset: Offset(2, 13),
+            blurRadius: 5,
+          ),
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.02),
+            offset: Offset(4, 21),
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: Card(
+        color: primaryColor,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AllTask()),
+            );
+          },
           child: Container(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -111,21 +124,11 @@ class _GridItemState extends State<GridItem> {
                   'All',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: 'SFPro-Regular',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: headColor,
-                  ),
+                  style: headTextStyle,
                 ),
                 const Text(
                   '+99 tasks',
-                  style: TextStyle(
-                    fontFamily: 'SFPro-Regular',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: bodyColor,
-                  ),
+                  style: bodyTextStyle,
                 ),
               ],
             ),

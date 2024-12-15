@@ -19,4 +19,7 @@ final SvgPicture travelIcon = SvgPicture.asset('assets/images/travel-icon.svg');
 
 final SvgPicture workIcon = SvgPicture.asset('assets/images/work-icon.svg');
 
+final SvgPicture arrowBackIcon =
+    SvgPicture.asset('assets/images/arrow-back.svg');
+
 const Icon addIcon = Icon(Icons.add);
