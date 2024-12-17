@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../designs/images.dart';
 import '../../designs/style.dart';
 import '../../designs/colors.dart';
+import '../../designs/widgets/createDialog.dart';
 
 class AllTask extends StatelessWidget {
   const AllTask({super.key});
@@ -34,6 +35,9 @@ class AllTask extends StatelessWidget {
         padding: const EdgeInsets.only(left: 28, top: 25, right: 28),
         children: <Widget>[_task()],
       ),
+      bottomNavigationBar: const BottomNavigation(),
+      floatingActionButton: const AddButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -122,6 +126,56 @@ class AllTask extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BottomNavigation extends StatelessWidget {
+  const BottomNavigation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      backgroundColor: primaryColor,
+      items: [
+        BottomNavigationBarItem(
+          icon: allIcon,
+          label: 'Tasks',
+        ),
+        BottomNavigationBarItem(
+          icon: mineIcon,
+          label: 'Mine',
+        ),
+      ],
+    );
+  }
+}
+
+class AddButton extends StatelessWidget {
+  const AddButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: SizedBox(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          onPressed: () {
+            // ignore: avoid_print
+            print('addButton');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CreateDialog(title: 'task');
+              },
+            );
+            // const CreateDialog(title: 'category');
+          },
+          backgroundColor: primaryColor,
+          child: addIcon,
         ),
       ),
     );

@@ -5,8 +5,9 @@ import 'package:todolist/pages/task/task_page.dart';
 import '../../designs/colors.dart';
 import '../../designs/images.dart';
 import '../../designs/style.dart';
+import '../../designs/widgets/createDialog.dart';
 
-class MainTasksPage extends StatefulWidget {
+class MainTasksPage extends StatelessWidget {
   const MainTasksPage({
     super.key,
     required this.title,
@@ -15,18 +16,13 @@ class MainTasksPage extends StatefulWidget {
   final String title;
 
   @override
-  State<MainTasksPage> createState() => _TasksPageState();
-}
-
-class _TasksPageState extends State<MainTasksPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
         title: Text(
-          widget.title,
+          title,
           style: titleTextStyle,
         ),
         centerTitle: true,
@@ -170,7 +166,17 @@ class AddButton extends StatelessWidget {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            // ignore: avoid_print
+            print('addButton');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CreateDialog(title: 'category');
+              },
+            );
+            // const CreateDialog(title: 'category');
+          },
           backgroundColor: primaryColor,
           child: addIcon,
         ),
