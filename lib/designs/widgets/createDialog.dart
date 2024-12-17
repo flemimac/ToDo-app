@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/designs/colors.dart';
-import 'package:todolist/designs/style.dart';
+import '../../designs/colors.dart';
+import '../../designs/style.dart';
 
 class CreateDialog extends StatelessWidget {
   const CreateDialog({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/mainTasks/mainTasks_page.dart';
+import 'pages/category/category_page.dart';
 
 void main() {
   runApp(const Main());
@@ -14,7 +14,7 @@ class Main extends StatelessWidget {
     return const MaterialApp(
       title: 'Todo List',
       debugShowCheckedModeBanner: false,
-      home: MainTasksPage(title: 'Tasks'),
+      home: CategoryPage(title: 'Tasks'),
     );
   }
 }

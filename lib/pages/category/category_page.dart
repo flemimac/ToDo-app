@@ -7,8 +7,8 @@ import '../../designs/images.dart';
 import '../../designs/style.dart';
 import '../../designs/widgets/createDialog.dart';
 
-class MainTasksPage extends StatelessWidget {
-  const MainTasksPage({
+class CategoryPage extends StatelessWidget {
+  const CategoryPage({
     super.key,
     required this.title,
   });
