@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../models/todo.dart';
+import '../../pages/task/task_item.dart';
+
 import '../../designs/images.dart';
 import '../../designs/style.dart';
 import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
-import '../../designs/widgets/editDialog.dart';
 
-class AllTask extends StatelessWidget {
-  const AllTask({super.key});
+class TaskPage extends StatelessWidget {
+  TaskPage({super.key});
+
+  final todoList = ToDo.todoList();
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +19,7 @@ class AllTask extends StatelessWidget {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        elevation: 0,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -34,109 +39,16 @@ class AllTask extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.only(left: 28, top: 25, right: 28),
-        children: <Widget>[
-          _task(context),
+        children: [
+          for (ToDo todo in todoList)
+            TaskItem(
+              todo: todo,
+            ),
         ],
       ),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: const AddButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-  }
-
-  Widget _task(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.06),
-            offset: Offset(0, 1),
-            blurRadius: 2,
-          ),
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            offset: Offset(1, 3),
-            blurRadius: 3,
-          ),
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.04),
-            offset: Offset(1, 7),
-            blurRadius: 5,
-          ),
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.03),
-            offset: Offset(2, 13),
-            blurRadius: 5,
-          ),
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.02),
-            offset: Offset(4, 21),
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      child: Card(
-        color: primaryColor,
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        child: InkWell(
-          onTap: () {
-            // ignore: avoid_print
-            print('TaskCard');
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Column(
-                    spacing: 4,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Task',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: headTextStyle,
-                      ),
-                      Text(
-                        'Description',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: bodyTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: InkWell(
-                    onTap: () {
-                      // ignore: avoid_print
-                      print('ChecIcon');
-                    },
-                    child: checkIcon,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    // ignore: avoid_print
-                    print('EditIcon');
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const EditDialog(title: 'task');
-                      },
-                    );
-                  },
-                  child: editIcon,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -167,10 +79,17 @@ class AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: SizedBox(
-        width: 70,
-        height: 70,
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: borderColor,
+          width: 2,
+        ),
+      ),
+      width: 70,
+      height: 70,
+      child: ClipOval(
         child: FloatingActionButton(
           onPressed: () {
             // ignore: avoid_print
@@ -181,7 +100,6 @@ class AddButton extends StatelessWidget {
                 return const CreateDialog(title: 'task');
               },
             );
-            // const CreateDialog(title: 'category');
           },
           backgroundColor: primaryColor,
           child: addIcon,

@@ -30,7 +30,7 @@ class CategoryPage extends StatelessWidget {
       body: const CategoryGrid(),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: const AddButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -61,10 +61,17 @@ class AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: SizedBox(
-        width: 70,
-        height: 70,
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: borderColor,
+          width: 2,
+        ),
+      ),
+      width: 70,
+      height: 70,
+      child: ClipOval(
         child: FloatingActionButton(
           onPressed: () {
             // ignore: avoid_print
@@ -72,7 +79,7 @@ class AddButton extends StatelessWidget {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const CreateDialog(title: 'category');
+                return const CreateDialog(title: 'task');
               },
             );
           },

@@ -22,4 +22,4 @@ final SvgPicture workIcon = SvgPicture.asset('assets/images/work-icon.svg');
 final SvgPicture arrowBackIcon =
     SvgPicture.asset('assets/images/arrow-back.svg');
 
-const Icon addIcon = Icon(Icons.add);
+const Icon addIcon = Icon(Icons.add, color: Colors.black);

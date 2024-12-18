@@ -75,7 +75,7 @@ class _CategoryGridState extends State<CategoryGrid> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AllTask()),
+              MaterialPageRoute(builder: (context) => TaskPage()),
             );
           },
           child: Container(
