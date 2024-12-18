@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../designs/colors.dart';
 import '../../designs/style.dart';
 
-class CreateDialog extends StatelessWidget {
-  const CreateDialog({
+class EditDialog extends StatelessWidget {
+  const EditDialog({
     super.key,
     required this.title,
   });
@@ -27,7 +27,7 @@ class CreateDialog extends StatelessWidget {
               spacing: 20,
               children: [
                 Text(
-                  'Create new $title',
+                  'Edit a $title',
                   style: dialogHeadTextStyle,
                 ),
                 Column(
@@ -47,7 +47,7 @@ class CreateDialog extends StatelessWidget {
                           borderSide:
                               const BorderSide(width: 3, color: primaryColor),
                         ),
-                        labelText: 'Input $title',
+                        labelText: 'Edit $title',
                       ),
                       style: dialogBodyTextStyle,
                     ),
@@ -69,7 +69,7 @@ class CreateDialog extends StatelessWidget {
                           borderSide:
                               const BorderSide(width: 3, color: primaryColor),
                         ),
-                        labelText: 'Input description',
+                        labelText: 'Edit description',
                       ),
                       style: dialogBodyTextStyle,
                     ),
@@ -155,7 +155,7 @@ class CreateDialog extends StatelessWidget {
                             ),
                             backgroundColor: primaryColor),
                         child: const Text(
-                          'Create',
+                          'Edit',
                           style: buttonTextStyle,
                         ),
                       ),

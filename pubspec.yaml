@@ -1,7 +1,7 @@
 name: todolist
 description: "A new Flutter project."
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -32,4 +32,3 @@ flutter:
     - family: SFPro-Regular
       fonts:
         - asset: assets/fonts/SFProText-Regular.ttf
-

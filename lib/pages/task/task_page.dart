@@ -4,6 +4,7 @@ import '../../designs/images.dart';
 import '../../designs/style.dart';
 import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
+import '../../designs/widgets/editDialog.dart';
 
 class AllTask extends StatelessWidget {
   const AllTask({super.key});
@@ -33,7 +34,9 @@ class AllTask extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.only(left: 28, top: 25, right: 28),
-        children: <Widget>[_task()],
+        children: <Widget>[
+          _task(context),
+        ],
       ),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: const AddButton(),
@@ -41,7 +44,7 @@ class AllTask extends StatelessWidget {
     );
   }
 
-  Widget _task() {
+  Widget _task(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -120,6 +123,12 @@ class AllTask extends StatelessWidget {
                   onTap: () {
                     // ignore: avoid_print
                     print('EditIcon');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const EditDialog(title: 'task');
+                      },
+                    );
                   },
                   child: editIcon,
                 ),
