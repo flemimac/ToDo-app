@@ -8,9 +8,14 @@ import '../../designs/style.dart';
 import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
 
-class TaskPage extends StatelessWidget {
+class TaskPage extends StatefulWidget {
   TaskPage({super.key});
 
+  @override
+  State<TaskPage> createState() => _TaskPageState();
+}
+
+class _TaskPageState extends State<TaskPage> {
   final todoList = ToDo.todoList();
 
   @override
@@ -43,13 +48,39 @@ class TaskPage extends StatelessWidget {
           for (ToDo todo in todoList)
             TaskItem(
               todo: todo,
+              onToDoChanged: _handleToDoChange,
+              onDeleteItem: _deleteToDoItem,
             ),
         ],
       ),
       bottomNavigationBar: const BottomNavigation(),
-      floatingActionButton: const AddButton(),
+      floatingActionButton: AddButton(
+        onCreate: _addToDoItem,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  void _handleToDoChange(ToDo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _deleteToDoItem(String id) {
+    setState(() {
+      todoList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addToDoItem(String todoTask, String todoDesc) {
+    setState(() {
+      todoList.add(ToDo(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        todoTask: todoTask,
+        todoDesc: todoDesc,
+      ));
+    });
   }
 }
 
@@ -75,7 +106,11 @@ class BottomNavigation extends StatelessWidget {
 }
 
 class AddButton extends StatelessWidget {
-  const AddButton({super.key});
+  final Function(String, String) onCreate;
+  const AddButton({
+    super.key,
+    required this.onCreate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +132,10 @@ class AddButton extends StatelessWidget {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const CreateDialog(title: 'task');
+                return CreateDialog(
+                  title: 'task',
+                  onCreate: onCreate,
+                );
               },
             );
           },

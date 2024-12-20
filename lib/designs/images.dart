@@ -7,6 +7,11 @@ final SvgPicture allIcon =
 
 final SvgPicture checkIcon = SvgPicture.asset('assets/images/check-icon.svg');
 
+final SvgPicture finishCheckIcon =
+    SvgPicture.asset('assets/images/finishCheck-icon.svg');
+
+final SvgPicture trashIcon = SvgPicture.asset('assets/images/trash-icon.svg');
+
 final SvgPicture editIcon = SvgPicture.asset('assets/images/edit-icon.svg');
 
 final SvgPicture marketIcon = SvgPicture.asset('assets/images/market-icon.svg');

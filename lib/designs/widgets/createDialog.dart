@@ -3,13 +3,23 @@ import 'package:flutter/material.dart';
 import '../../designs/colors.dart';
 import '../../designs/style.dart';
 
-class CreateDialog extends StatelessWidget {
+class CreateDialog extends StatefulWidget {
   const CreateDialog({
     super.key,
     required this.title,
+    required this.onCreate,
   });
 
   final String title;
+  final Function(String, String) onCreate;
+
+  @override
+  State<CreateDialog> createState() => _CreateDialogState();
+}
+
+class _CreateDialogState extends State<CreateDialog> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +37,15 @@ class CreateDialog extends StatelessWidget {
               spacing: 20,
               children: [
                 Text(
-                  'Create new $title',
+                  'Create new ${widget.title}',
                   style: dialogHeadTextStyle,
                 ),
                 Column(
                   spacing: 15,
                   children: [
                     TextField(
+                      controller: _titleController,
                       maxLines: 1,
-                      obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -47,18 +57,14 @@ class CreateDialog extends StatelessWidget {
                           borderSide:
                               const BorderSide(width: 3, color: primaryColor),
                         ),
-                        labelText: 'Input $title',
+                        labelText: 'Input ${widget.title}',
                       ),
                       style: dialogBodyTextStyle,
                     ),
                     TextField(
-                      obscureText: true,
+                      controller: _descriptionController,
+                      maxLines: 1,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide:
-                              const BorderSide(width: 3, color: primaryColor),
-                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide:
@@ -147,7 +153,15 @@ class CreateDialog extends StatelessWidget {
                         ],
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.onCreate(
+                            _titleController.text,
+                            _descriptionController.text,
+                          );
+                          Navigator.pop(context);
+                          // ignore: avoid_print
+                          print('Create dialog');
+                        },
                         style: TextButton.styleFrom(
                             shape: const RoundedRectangleBorder(
                               borderRadius:

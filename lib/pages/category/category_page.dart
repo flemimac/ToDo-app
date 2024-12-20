@@ -76,12 +76,12 @@ class AddButton extends StatelessWidget {
           onPressed: () {
             // ignore: avoid_print
             print('addButton');
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const CreateDialog(title: 'task');
-              },
-            );
+            // showDialog(
+            //   context: context,
+            //   builder: (BuildContext context) {
+            //     return const CreateDialog(title: 'task');
+            //   },
+            // );
           },
           backgroundColor: primaryColor,
           child: addIcon,
