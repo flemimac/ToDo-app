@@ -9,7 +9,7 @@ import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
 
 class TaskPage extends StatefulWidget {
-  TaskPage({super.key});
+  const TaskPage({super.key});
 
   @override
   State<TaskPage> createState() => _TaskPageState();
