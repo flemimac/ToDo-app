@@ -1,4 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+
+import '../../models/category.dart';
+import '../../models/model.dart';
 
 import '../../models/todo.dart';
 import '../../pages/task/task_item.dart';
@@ -9,14 +14,22 @@ import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+  final String? title;
+  final String? categoryFilter;
+
+  const TaskPage({
+    super.key,
+    required this.title,
+    this.categoryFilter,
+  });
 
   @override
   State<TaskPage> createState() => _TaskPageState();
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final todoList = ToDo.todoList();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+  List<ToDo> todoList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +49,8 @@ class _TaskPageState extends State<TaskPage> {
             );
           },
         ),
-        title: const Text(
-          'All',
+        title: Text(
+          widget.title!,
           style: titleTextStyle,
         ),
         centerTitle: true,
@@ -61,26 +74,84 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  void _handleToDoChange(ToDo todo) {
+  @override
+  void initState() {
+    super.initState();
+    _loadToDos();
+  }
+
+  Future<void> _loadToDos() async {
+    todoList = await _databaseHelper.getToDos();
+
+    if (widget.categoryFilter != null && widget.categoryFilter != 'All') {
+      todoList = todoList
+          .where((todo) => todo.todoCategory == widget.categoryFilter)
+          .toList();
+    }
+
+    _updateCategoryCounters();
+    setState(() {});
+  }
+
+  void _updateCategoryCounters() {
+    // for (var category in Category.categoryList()) {
+    //   category.counter = 0;
+    // }
+
+    for (var todo in todoList) {
+      // print("${todo.todoCategory} todo.todoCategory");
+
+      for (var category in Category.categoryList()) {
+        // print("----------------------");
+        if (category.name == 'All') {
+          category.counter++;
+          // print("${category.id} category.id");
+          // print("${category.name} category.name");
+          // print("${category.counter} category.counter");
+        }
+        // print("++++++++++++++");
+        if (todo.todoCategory == category.name) {
+          category.counter++;
+          // print("${category.id} category.id");
+          // print("${category.name} category.name");
+          // print("${category.counter} category.counter");
+        }
+      }
+    }
+  }
+
+  void _handleToDoChange(ToDo todo) async {
     setState(() {
       todo.isDone = !todo.isDone;
     });
+    await _databaseHelper.updateToDo(todo);
   }
 
-  void _deleteToDoItem(String id) {
+  void _deleteToDoItem(String id) async {
     setState(() {
       todoList.removeWhere((item) => item.id == id);
     });
+    await _databaseHelper.deleteToDo(id);
   }
 
-  void _addToDoItem(String todoTask, String todoDesc) {
+  void _addToDoItem(
+      String todoTask, String todoDesc, String todoCategory) async {
+    print('Загруженные задачи: ${todoList}');
+    final newTodo = ToDo(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      todoTask: todoTask,
+      todoDesc: todoDesc,
+      todoCategory: todoCategory,
+    );
+
     setState(() {
-      todoList.add(ToDo(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        todoTask: todoTask,
-        todoDesc: todoDesc,
-      ));
+      todoList.add(newTodo);
     });
+    await _databaseHelper.insertToDo(newTodo);
+    _updateCategoryCounters();
+
+    print('Добавлена задача: $newTodo');
+    print('Обновленные счетчики категорий: ${Category.categoryList()}');
   }
 }
 
@@ -106,7 +177,8 @@ class BottomNavigation extends StatelessWidget {
 }
 
 class AddButton extends StatelessWidget {
-  final Function(String, String) onCreate;
+  final Function(String, String, String) onCreate;
+
   const AddButton({
     super.key,
     required this.onCreate,
@@ -127,7 +199,6 @@ class AddButton extends StatelessWidget {
       child: ClipOval(
         child: FloatingActionButton(
           onPressed: () {
-            // ignore: avoid_print
             print('addButton');
             showDialog(
               context: context,

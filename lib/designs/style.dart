@@ -16,7 +16,7 @@ const TextStyle headTextStyle = TextStyle(
 
 const TextStyle bodyTextStyle = TextStyle(
   fontFamily: 'SFPro-Regular',
-  fontSize: 12,
+  fontSize: 14,
   fontWeight: FontWeight.w400,
   color: bodyColor,
 );
@@ -30,9 +30,16 @@ const TextStyle dialogHeadTextStyle = TextStyle(
 
 const TextStyle dialogBodyTextStyle = TextStyle(
   fontFamily: 'SFPro-Regular',
-  fontSize: 12,
+  fontSize: 14,
   fontWeight: FontWeight.w400,
   color: bodyColor,
+);
+
+const TextStyle dialogCategoryTextStyle = TextStyle(
+  fontFamily: 'SFPro-Regular',
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: headColor,
 );
 
 const TextStyle buttonTextStyle = TextStyle(

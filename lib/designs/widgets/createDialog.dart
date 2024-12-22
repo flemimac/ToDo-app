@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/category.dart';
+
 import '../../designs/colors.dart';
 import '../../designs/style.dart';
 
@@ -11,7 +13,7 @@ class CreateDialog extends StatefulWidget {
   });
 
   final String title;
-  final Function(String, String) onCreate;
+  final Function(String, String, String) onCreate;
 
   @override
   State<CreateDialog> createState() => _CreateDialogState();
@@ -20,6 +22,20 @@ class CreateDialog extends StatefulWidget {
 class _CreateDialogState extends State<CreateDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String? _selectedCategory;
+
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [];
+    for (var category in Category.categoryList()) {
+      menuItems.add(
+        DropdownMenuItem(
+          value: category.name,
+          child: Text(category.name!),
+        ),
+      );
+    }
+    return menuItems;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +94,30 @@ class _CreateDialogState extends State<CreateDialog> {
                         labelText: 'Input description',
                       ),
                       style: dialogBodyTextStyle,
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: _selectedCategory,
+                      style: dialogCategoryTextStyle,
+                      dropdownColor: primaryColor,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide:
+                              const BorderSide(width: 3, color: primaryColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide:
+                              const BorderSide(width: 3, color: primaryColor),
+                        ),
+                        labelText: 'Select a category',
+                      ),
+                      items: dropdownItems,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value;
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -157,6 +197,7 @@ class _CreateDialogState extends State<CreateDialog> {
                           widget.onCreate(
                             _titleController.text,
                             _descriptionController.text,
+                            _selectedCategory ?? '',
                           );
                           Navigator.pop(context);
                           // ignore: avoid_print

@@ -56,7 +56,12 @@ class CategoryItem extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const TaskPage()),
+              MaterialPageRoute(
+                builder: (context) => TaskPage(
+                  title: category.name,
+                  categoryFilter: category.name,
+                ),
+              ),
             );
           },
           child: Container(
@@ -74,7 +79,7 @@ class CategoryItem extends StatelessWidget {
                   style: headTextStyle,
                 ),
                 Text(
-                  '${category.counter!} tasks',
+                  "${category.counter.toString()} tasks",
                   style: bodyTextStyle,
                 ),
               ],
