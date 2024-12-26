@@ -17,11 +17,11 @@ class Category {
 
   static List<Category> categoryList() {
     return [
-      Category(id: '01', name: 'All', image: allIcon, counter: 0),
-      Category(id: '02', name: 'Travel', image: travelIcon, counter: 0),
-      Category(id: '03', name: 'Study', image: studyIcon, counter: 0),
-      Category(id: '04', name: 'Work', image: workIcon, counter: 0),
-      Category(id: '04', name: 'Market', image: marketIcon, counter: 0),
+      Category(id: '01', name: 'All', image: allIcon),
+      Category(id: '02', name: 'Travel', image: travelIcon),
+      Category(id: '03', name: 'Study', image: studyIcon),
+      Category(id: '04', name: 'Work', image: workIcon),
+      Category(id: '04', name: 'Market', image: marketIcon),
     ];
   }
 }

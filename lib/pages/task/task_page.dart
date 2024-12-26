@@ -28,6 +28,7 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  final categoryList = Category.categoryList();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<ToDo> todoList = [];
 
@@ -88,36 +89,7 @@ class _TaskPageState extends State<TaskPage> {
           .where((todo) => todo.todoCategory == widget.categoryFilter)
           .toList();
     }
-
-    _updateCategoryCounters();
     setState(() {});
-  }
-
-  void _updateCategoryCounters() {
-    // for (var category in Category.categoryList()) {
-    //   category.counter = 0;
-    // }
-
-    for (var todo in todoList) {
-      // print("${todo.todoCategory} todo.todoCategory");
-
-      for (var category in Category.categoryList()) {
-        // print("----------------------");
-        if (category.name == 'All') {
-          category.counter++;
-          // print("${category.id} category.id");
-          // print("${category.name} category.name");
-          // print("${category.counter} category.counter");
-        }
-        // print("++++++++++++++");
-        if (todo.todoCategory == category.name) {
-          category.counter++;
-          // print("${category.id} category.id");
-          // print("${category.name} category.name");
-          // print("${category.counter} category.counter");
-        }
-      }
-    }
   }
 
   void _handleToDoChange(ToDo todo) async {
@@ -136,7 +108,6 @@ class _TaskPageState extends State<TaskPage> {
 
   void _addToDoItem(
       String todoTask, String todoDesc, String todoCategory) async {
-    print('Загруженные задачи: ${todoList}');
     final newTodo = ToDo(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       todoTask: todoTask,
@@ -146,12 +117,34 @@ class _TaskPageState extends State<TaskPage> {
 
     setState(() {
       todoList.add(newTodo);
+
+      _updateCategoryCounters();
     });
     await _databaseHelper.insertToDo(newTodo);
-    _updateCategoryCounters();
 
     print('Добавлена задача: $newTodo');
-    print('Обновленные счетчики категорий: ${Category.categoryList()}');
+
+    for (var category in categoryList) {
+      print('2 category: ${category.name} counter ${category.counter}');
+    }
+  }
+
+  void _updateCategoryCounters() {
+    print('UPDATE #2');
+    for (var category in categoryList) {
+      category.counter = 0; // Сбрасываем счетчик
+    }
+
+    for (var todo in todoList) {
+      for (var category in categoryList) {
+        if (category.name == 'All') {
+          category.counter++;
+        }
+        if (todo.todoCategory == category.name) {
+          category.counter++;
+        }
+      }
+    }
   }
 }
 

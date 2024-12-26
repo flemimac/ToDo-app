@@ -7,7 +7,7 @@ import '../../models/category.dart';
 
 import '../task/task_page.dart';
 
-class CategoryItem extends StatelessWidget {
+class CategoryItem extends StatefulWidget {
   final Category category;
 
   const CategoryItem({
@@ -15,6 +15,11 @@ class CategoryItem extends StatelessWidget {
     required this.category,
   });
 
+  @override
+  State<CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<CategoryItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,8 +63,8 @@ class CategoryItem extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => TaskPage(
-                  title: category.name,
-                  categoryFilter: category.name,
+                  title: widget.category.name,
+                  categoryFilter: widget.category.name,
                 ),
               ),
             );
@@ -70,16 +75,16 @@ class CategoryItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: category.image!,
+                  child: widget.category.image!,
                 ),
                 Text(
-                  category.name!,
+                  widget.category.name!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: headTextStyle,
                 ),
                 Text(
-                  "${category.counter.toString()} tasks",
+                  "${widget.category.counter} tasks",
                   style: bodyTextStyle,
                 ),
               ],
