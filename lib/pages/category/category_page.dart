@@ -1,16 +1,15 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../designs/colors.dart';
 import '../../designs/images.dart';
 import '../../designs/style.dart';
-// import '../../designs/widgets/createDialog.dart';
 
 import '../../models/category.dart';
-import '../../models/model.dart';
-import '../../models/todo.dart';
-// import 'category_grid.dart';
+
+import 'bloc/category_bloc.dart';
 import 'category_item.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -26,10 +25,13 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final categoryList = Category.categoryList();
+  late CategoryBloc _categoryBloc;
 
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<ToDo> todoList = [];
+  @override
+  void initState() {
+    super.initState();
+    _categoryBloc = CategoryBloc()..add(LoadCategoriesEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +45,27 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 22, top: 28, right: 22),
-        child: GridView.count(
-          crossAxisCount: 3,
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 15,
-          children: [
-            for (Category category in categoryList)
-              CategoryItem(
-                category: category,
+      body: BlocBuilder<CategoryBloc, CategoryState>(
+        bloc: _categoryBloc,
+        builder: (context, state) {
+          if (state is CategoryLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CategoryLoadedState) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 22, top: 28, right: 22),
+              child: GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 15,
+                children: [
+                  for (Category category in state.categories)
+                    CategoryItem(category: category),
+                ],
               ),
-          ],
-        ),
+            );
+          }
+          return Container(); // В случае ошибки
+        },
       ),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: const AddButton(),
@@ -64,39 +74,9 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _loadCategory();
-  }
-
-  Future<void> _loadCategory() async {
-    todoList = await _databaseHelper.getToDos();
-
-    setState(() {
-      _updateCategoryCounters();
-    });
-
-    for (var category in categoryList) {
-      print('1 category: ${category.name} counter ${category.counter}');
-    }
-  }
-
-  void _updateCategoryCounters() {
-    print('UPDATE #1');
-    for (var category in categoryList) {
-      category.counter = 0;
-    }
-
-    for (var todo in todoList) {
-      for (var category in categoryList) {
-        if (category.name == 'All') {
-          category.counter++;
-        }
-        if (todo.todoCategory == category.name) {
-          category.counter++;
-        }
-      }
-    }
+  void dispose() {
+    _categoryBloc.close();
+    super.dispose();
   }
 }
 

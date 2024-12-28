@@ -1,17 +1,19 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/category.dart';
 import '../../models/model.dart';
-
 import '../../models/todo.dart';
+
 import '../../pages/task/task_item.dart';
 
 import '../../designs/images.dart';
 import '../../designs/style.dart';
 import '../../designs/colors.dart';
 import '../../designs/widgets/createDialog.dart';
+
+import 'bloc/task_bloc.dart';
 
 class TaskPage extends StatefulWidget {
   final String? title;
@@ -28,9 +30,15 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final categoryList = Category.categoryList();
+  late TaskBloc _taskBloc;
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<ToDo> todoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _taskBloc = TaskBloc();
+    _taskBloc.add(LoadTasksEvent(categoryFilter: widget.categoryFilter));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,40 +64,51 @@ class _TaskPageState extends State<TaskPage> {
         ),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(left: 28, top: 25, right: 28),
-        children: [
-          for (ToDo todo in todoList)
-            TaskItem(
-              todo: todo,
-              onToDoChanged: _handleToDoChange,
-              onDeleteItem: _deleteToDoItem,
-            ),
-        ],
+      body: BlocBuilder<TaskBloc, TaskState>(
+        bloc: _taskBloc,
+        builder: (context, state) {
+          if (state is LoadingTasksState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is LoadedTasksState) {
+            return ListView(
+              padding: const EdgeInsets.only(left: 28, top: 25, right: 28),
+              children: [
+                for (ToDo todo in state.tasks)
+                  TaskItem(
+                    todo: todo,
+                    onToDoChanged: _handleToDoChange,
+                    onDeleteItem: (id) {
+                      _taskBloc.add(DeleteTaskEvent(id));
+                    },
+                  ),
+              ],
+            );
+          } else if (state is ErrorTasksState) {
+            return Center(child: Text('Error: ${state.error}'));
+          }
+          return Container();
+        },
       ),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: AddButton(
-        onCreate: _addToDoItem,
+        onCreate: (todoTask, todoDesc, todoCategory) {
+          final newTodo = ToDo(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            todoTask: todoTask,
+            todoDesc: todoDesc,
+            todoCategory: todoCategory,
+          );
+          _taskBloc.add(AddTaskEvent(newTodo));
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
   @override
-  void initState() {
-    super.initState();
-    _loadToDos();
-  }
-
-  Future<void> _loadToDos() async {
-    todoList = await _databaseHelper.getToDos();
-
-    if (widget.categoryFilter != null && widget.categoryFilter != 'All') {
-      todoList = todoList
-          .where((todo) => todo.todoCategory == widget.categoryFilter)
-          .toList();
-    }
-    setState(() {});
+  void dispose() {
+    _taskBloc.close();
+    super.dispose();
   }
 
   void _handleToDoChange(ToDo todo) async {
@@ -97,54 +116,6 @@ class _TaskPageState extends State<TaskPage> {
       todo.isDone = !todo.isDone;
     });
     await _databaseHelper.updateToDo(todo);
-  }
-
-  void _deleteToDoItem(String id) async {
-    setState(() {
-      todoList.removeWhere((item) => item.id == id);
-    });
-    await _databaseHelper.deleteToDo(id);
-  }
-
-  void _addToDoItem(
-      String todoTask, String todoDesc, String todoCategory) async {
-    final newTodo = ToDo(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      todoTask: todoTask,
-      todoDesc: todoDesc,
-      todoCategory: todoCategory,
-    );
-
-    setState(() {
-      todoList.add(newTodo);
-
-      _updateCategoryCounters();
-    });
-    await _databaseHelper.insertToDo(newTodo);
-
-    print('Добавлена задача: $newTodo');
-
-    for (var category in categoryList) {
-      print('2 category: ${category.name} counter ${category.counter}');
-    }
-  }
-
-  void _updateCategoryCounters() {
-    print('UPDATE #2');
-    for (var category in categoryList) {
-      category.counter = 0; // Сбрасываем счетчик
-    }
-
-    for (var todo in todoList) {
-      for (var category in categoryList) {
-        if (category.name == 'All') {
-          category.counter++;
-        }
-        if (todo.todoCategory == category.name) {
-          category.counter++;
-        }
-      }
-    }
   }
 }
 
